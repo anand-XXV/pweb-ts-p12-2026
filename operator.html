@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operator Antrian - Rumah Sakit</title>
+  <link rel="stylesheet" href="style/operator.css">
+  <script type="module" src="dist/operator.js" defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand-title" href="operator.html">Operator Antrian</a>
+    <nav class="nav-links" aria-label="Navigasi utama">
+      <a class="nav-item active" href="operator.html" aria-current="page">Operator</a>
+      <a class="nav-item" href="layar.html">Layar Antrian</a>
+    </nav>
+    <div class="user-info">
+      <span id="user-display">Operator</span>
+      <button id="logout-btn" class="btn-outline" type="button">Keluar</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <header class="dashboard-header">
+      <h1>Panel Penganggilan Antrian</h1>
+      <p class="subtitle">Panggilan mengikuti prioritas VIP, Disabilitas, Lansia, lalu Normal.</p>
+    </header>
+
+    <p id="operator-feedback" class="feedback" role="status" aria-live="polite"></p>
+
+    <section class="operator-grid" aria-label="Status panggilan antrian">
+      <article class="card current-ticket-card">
+        <h2>Sedang Dipanggil</h2>
+        <p id="current-ticket" class="ticket-id" aria-live="polite">—</p>
+        <p id="current-details" class="ticket-details">Memuat data antrian...</p>
+      </article>
+
+      <article class="card next-ticket-card">
+        <h2>Antrian Berikutnya</h2>
+        <p id="next-ticket" class="ticket-id">—</p>
+        <p id="next-details" class="ticket-details">Memuat data antrian...</p>
+      </article>
+    </section>
+
+    <section class="card operator-actions" aria-label="Aksi operator">
+      <p id="queue-summary" class="queue-summary">Memuat jumlah antrian...</p>
+      <div class="action-buttons">
+        <button id="call-next-btn" class="btn-primary" type="button">Panggil Berikutnya</button>
+        <button id="skip-btn" class="btn-outline-danger" type="button">Lewati</button>
+        <button id="finish-btn" class="btn-outline" type="button">Selesai</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
