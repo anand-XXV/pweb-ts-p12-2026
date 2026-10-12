@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - Antrian Rumah Sakit</title>
+  <link rel="stylesheet" href="style/index.css">
+  <script type="module" src="dist/index.js" defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="brand-title">Antrian Tiket</span>
+      <nav class="nav-links">
+        <a href="#" class="nav-item">Beranda</a>
+        <a href="layar.html" class="nav-item">Kiosk</a>
+        <a href="operator.html" class="nav-item">Operator</a>
+        <a href="index.html" class="nav-item active">Dashboard</a>
+      </nav>
+    </div>
+    <div class="user-info">
+      <span id="user-display">Admin</span>
+      <button id="reset-antrian-btn" class="btn-outline-danger">Reset Antrian</button>
+      <button id="logout-btn" class="btn-outline">Keluar</button>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="dashboard-header">
+      <h2>Dashboard Admin</h2>
+      <p class="subtitle">Reset setiap hari agar penomoran antrian mulai dari awal.</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <section class="card">
+        <h3>Jenis antrian</h3>
+        <form id="add-queue-form" class="queue-form">
+          <div class="form-row">
+            <div class="form-group code-input">
+              <label for="queue-code">Kode</label>
+              <input type="text" id="queue-code" maxlength="1" placeholder="C" required>
+            </div>
+            <div class="form-group name-input">
+              <label for="queue-name">Nama</label>
+              <input type="text" id="queue-name" placeholder="Contoh: Farmasi" required>
+            </div>
+            <div class="form-group btn-input">
+              <button type="submit" class="btn-dark">Tambah</button>
+            </div>
+          </div>
+        </form>
+
+        <div id="queue-types-list" class="queue-list"></div>
+      </section>
+
+      <section class="card">
+        <h3>Terbitkan tiket</h3>
+        <form id="issue-ticket-form" class="issue-form">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="ticket-queue-select">Jenis antrian</label>
+              <select id="ticket-queue-select" required></select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="ticket-priority-select">Prioritas</label>
+              <select id="ticket-priority-select">
+                <option value="Normal">Normal</option>
+                <option value="Lansia">Lansia</option>
+                <option value="Disabilitas">Disabilitas</option>
+                <option value="VIP">VIP</option>
+              </select>
+            </div>
+            <div class="form-group btn-input">
+              <button type="submit" class="btn-gray">Terbitkan</button>
+            </div>
+          </div>
+        </form>
+
+        <div id="tickets-grouped-container" class="tickets-grouped-list"></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
