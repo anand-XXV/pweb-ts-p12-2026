@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambil Nomor Antrean - Rumah Sakit</title>
+    <link rel="stylesheet" href="style/ambil-antrian.css">
+  <script type="module" src="dist/ambil-antrian.js" defer></script>
+</head>
+
+<body>
+  <header class="navbar">
+    <h1>Antrean Rumah Sakit</h1>
+
+    <nav aria-label="Navigasi halaman">
+      <a href="layar.html">Layar Antrean</a>
+      <a href="ambil-antrian.html" aria-current="page">
+        Ambil Nomor
+      </a>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <section class="page-header">
+      <h2>Ambil Nomor Antrean</h2>
+      <p>
+        Pilih jenis layanan untuk mengambil nomor antrean.
+      </p>
+    </section>
+
+    <p id="error-message" role="alert" hidden></p>
+
+    <section aria-labelledby="service-heading">
+      <h2 id="service-heading">Pilih Layanan</h2>
+
+      <p id="loading-message">Memuat jenis antrean...</p>
+
+      <div id="queue-types-container" class="queue-grid">
+      </div>
+
+      <p id="empty-message" hidden>
+        Belum ada jenis antrean yang tersedia.
+      </p>
+    </section>
+
+    <template id="queue-card-template">
+      <article class="queue-card">
+        <div class="queue-card-header">
+          <h3 class="queue-name"></h3>
+          <span class="queue-code"></span>
+        </div>
+
+        <button
+          type="button"
+          class="take-ticket-button"
+          data-priority="Normal"
+        >
+          Ambil Nomor
+        </button>
+
+        <p>Ambil dengan prioritas:</p>
+
+        <div class="priority-buttons">
+          <button type="button" data-priority="Lansia">
+            Lansia
+          </button>
+
+          <button type="button" data-priority="Disabilitas">
+            Disabilitas
+          </button>
+
+          <button type="button" data-priority="VIP">
+            VIP
+          </button>
+        </div>
+      </article>
+    </template>
+
+    <section
+      id="ticket-result"
+      class="ticket-result"
+      aria-live="polite"
+      hidden
+    >
+      <h2>Nomor Antrean Berhasil Diambil!</h2>
+
+      <p>Nomor antrean Anda:</p>
+      <h3 id="ticket-number"></h3>
+
+      <p>
+        Layanan:
+        <strong id="ticket-queue-name"></strong>
+      </p>
+
+      <p>
+        Prioritas:
+        <strong id="ticket-priority"></strong>
+      </p>
+
+      <button type="button" id="ticket-close-btn">
+        Tutup
+      </button>
+    </section>
+  </main>
+
+  <noscript>
+    Aktifkan JavaScript untuk menggunakan aplikasi antrean.
+  </noscript>
+</body>
+</html>
