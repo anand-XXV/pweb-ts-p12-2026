@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <title>Layar Antrian - Rumah Sakit</title>
+  <link rel="stylesheet" href="style/layar.css">
+  <script type="module" src="dist/layar.js" defer></script>
+</head>
+<body>
+  <header class="display-header">
+    <div>
+      <p class="eyebrow">Informasi Pelayanan</p>
+      <h1>Layar Antrian Rumah Sakit</h1>
+    </div>
+    <div class="display-header-actions">
+      <span id="updated-at" class="updated-at" aria-live="polite">Memuat data...</span>
+      <button id="fullscreen-btn" class="btn-fullscreen" type="button" aria-pressed="false">
+        Layar penuh
+      </button>
+    </div>
+  </header>
+
+  <main class="display-main">
+    <section class="active-calls-section" aria-labelledby="active-calls-heading">
+      <h2 id="active-calls-heading">Nomor Sedang Dipanggil</h2>
+      <div id="active-calls" class="active-calls" aria-live="polite">
+        <p class="empty-state">Memuat panggilan...</p>
+      </div>
+    </section>
+
+    <section class="queue-section" aria-labelledby="queue-heading">
+      <h2 id="queue-heading">Status Tiap Jenis Antrian</h2>
+      <div id="queue-cards" class="queue-cards" aria-live="polite">
+        <p class="empty-state">Memuat jenis antrian...</p>
+      </div>
+    </section>
+
+    <p id="display-feedback" class="feedback" role="status" aria-live="polite"></p>
+  </main>
+</body>
+</html>
