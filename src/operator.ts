@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const userDisplay = getElement<HTMLElement>('user-display');
+  const dashboardLink = getElement<HTMLAnchorElement>('dashboard-link');
   const logoutButton = getElement<HTMLButtonElement>('logout-btn');
   const currentTicket = getElement<HTMLElement>('current-ticket');
   const currentDetails = getElement<HTMLElement>('current-details');
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const finishButton = getElement<HTMLButtonElement>('finish-btn');
 
   userDisplay.textContent = `${session.firstName} (${session.role})`;
+  dashboardLink.hidden = session.role !== 'admin' && session.role !== 'moderator';
   logoutButton.addEventListener('click', logout);
 
   callNextButton.addEventListener('click', () => {

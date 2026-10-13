@@ -11,7 +11,7 @@ import {
   createTicket,
   resetAllTickets
 } from './shared/queue.js';
-import { Priority } from './shared/types.js';
+import { Priority, TicketStatus } from './shared/types.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const session = requireAuth(['admin', 'moderator']);
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ticketQueueSelect = document.getElementById('ticket-queue-select') as HTMLSelectElement;
   const ticketPrioritySelect = document.getElementById('ticket-priority-select') as HTMLSelectElement;
   const ticketsGroupedContainer = document.getElementById('tickets-grouped-container') as HTMLDivElement;
+  let lastTicketsSnapshot = '';
 
   userDisplay.textContent = `${session.firstName} (${session.role})`;
 
@@ -80,19 +81,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  (window as any).updateTicketStatus = (ticketId: string, newStatus: string) => {
+  (window as any).updateTicketStatus = (ticketId: string, newStatus: TicketStatus) => {
     const tickets = getTicketsStorage();
     const ticket = tickets.find(t => t.id === ticketId);
-    if (ticket) {
-      ticket.status = newStatus as any;
-      saveTicketsStorage(tickets);
-      renderAll();
-    }
+    if (!ticket) return;
+
+    ticket.status = newStatus;
+    saveTicketsStorage(tickets);
+    renderAll();
   };
 
   function renderAll() {
     renderQueueTypes();
     renderSelectOptions();
+    renderGroupedTickets();
+    lastTicketsSnapshot = JSON.stringify(getTicketsStorage());
+  }
+
+  function refreshTicketsIfChanged() {
+    const ticketsSnapshot = JSON.stringify(getTicketsStorage());
+    if (ticketsSnapshot === lastTicketsSnapshot) return;
+
+    lastTicketsSnapshot = ticketsSnapshot;
+    renderQueueTypes();
     renderGroupedTickets();
   }
 
@@ -198,5 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  window.addEventListener('storage', (event: StorageEvent) => {
+    if (event.key === 'tiket_antrian') {
+      refreshTicketsIfChanged();
+    } else if (event.key === 'jenis_antrian') {
+      renderAll();
+    }
+  });
+
+  window.setInterval(refreshTicketsIfChanged, 2500);
   renderAll();
 });
