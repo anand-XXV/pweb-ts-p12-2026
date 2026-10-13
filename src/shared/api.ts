@@ -1,4 +1,6 @@
 
+import type { Role } from './types.js';
+
 export interface LoginResponse {
   id?: number;
   accessToken?: string;
@@ -7,6 +9,65 @@ export interface LoginResponse {
   firstName?: string;
   username?: string;
   message?: string;
+}
+
+interface FilteredUsersResponse {
+  users?: Array<{
+    id?: number;
+    username?: string;
+  }>;
+}
+
+interface UserProfileResponse {
+  username?: string;
+  role?: string;
+}
+
+async function getFilteredUserRole(
+  userId: number,
+  username: string
+): Promise<Role> {
+  const roles = ['admin', 'user'] as const;
+  const results = await Promise.all(roles.map(async role => {
+    const response = await fetch(
+      `https://dummyjson.com/users/filter?key=role&value=${role}&limit=0`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Gagal memverifikasi daftar pengguna ${role}.`);
+    }
+
+    const data: FilteredUsersResponse = await response.json();
+    return {
+      role,
+      user: data.users?.find(user => user.id === userId)
+    };
+  }));
+
+  const matches = results.filter(result => result.user);
+  if (matches.length > 1) {
+    throw new Error('Role pengguna tidak dapat diverifikasi secara unik.');
+  }
+
+  const match = matches[0];
+  if (match) {
+    if (match.user?.username !== username) {
+      throw new Error('Username pada data role tidak cocok dengan akun login.');
+    }
+    return match.role;
+  }
+
+  const response = await fetch(`https://dummyjson.com/users/${userId}`);
+  if (!response.ok) {
+    throw new Error('Gagal mengambil data role moderator.');
+  }
+
+  const profile: UserProfileResponse = await response.json();
+  if (profile.username !== username || profile.role?.toLowerCase() !== 'moderator') {
+    throw new Error('Data role pengguna tidak valid.');
+  }
+
+  return 'moderator';
 }
 
 export async function loginApi(
@@ -29,27 +90,7 @@ export async function loginApi(
     throw new Error('ID pengguna tidak ditemukan.');
   }
 
-  const userResponse = await fetch(
-    `https://dummyjson.com/users/${data.id}`
-  );
-
-  if (!userResponse.ok) {
-    throw new Error('Gagal mengambil data role pengguna.');
-  }
-
-  const userData: {
-    username?: string;
-    role?: string;
-  } = await userResponse.json();
-
-  const role = userData.role?.toLowerCase();
-
-  if (
-    userData.username !== data.username ||
-    (role !== 'admin' && role !== 'moderator' && role !== 'user')
-  ) {
-    throw new Error('Data role pengguna tidak valid.');
-  }
+  const role = await getFilteredUserRole(data.id, data.username ?? username);
 
   return {
     ...data,
