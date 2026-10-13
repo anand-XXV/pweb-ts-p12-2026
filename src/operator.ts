@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let session: UserSession;
 
   try {
-    session = requireAuth(['admin', 'user']);
+    session = requireAuth(['admin']);
   } catch (error) {
     if (error instanceof Error && (error.message === 'Unauthorized' || error.message === 'Forbidden')) {
       return;
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const finishButton = getElement<HTMLButtonElement>('finish-btn');
 
   userDisplay.textContent = `${session.firstName} (${session.role})`;
-  dashboardLink.hidden = session.role !== 'admin' && session.role !== 'moderator';
+  dashboardLink.hidden = false;
   logoutButton.addEventListener('click', logout);
 
   callNextButton.addEventListener('click', () => {

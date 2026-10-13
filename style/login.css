@@ -103,14 +103,14 @@ body {
 
 .btn-primary {
   width: 100%;
-  min-height: 46px;
+  min-height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 18px;
+  padding: 10px 18px;
   margin-top: 8px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #172033;
   background: var(--primary);

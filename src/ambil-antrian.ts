@@ -1,9 +1,25 @@
 
+import { logout, requireAuth } from './shared/auth.js';
 import { getQueueTypesStorage } from './shared/storage.js';
 import { createTicket } from './shared/queue.js';
-import type { Priority, QueueType } from './shared/types.js';
+import type { Priority, QueueType, UserSession } from './shared/types.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  let session: UserSession;
+
+  try {
+    session = requireAuth(['admin', 'moderator', 'user']);
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') return;
+    throw error;
+  }
+
+  const userDisplay = getElement<HTMLElement>('user-display');
+  const logoutButton = getElement<HTMLButtonElement>('logout-btn');
+  userDisplay.textContent = `${session.firstName} (${session.role})`;
+  logoutButton.addEventListener('click', logout);
+  window.addEventListener('storage', handleSessionChange);
+
   const container = document.getElementById('queue-types-container') as HTMLDivElement;
   const template = document.getElementById('queue-card-template') as HTMLTemplateElement;
   const loadingMessage = document.getElementById('loading-message') as HTMLParagraphElement;
@@ -141,4 +157,16 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshQueues();
 
   window.setInterval(refreshQueues, 2500);
+
+  function handleSessionChange(event: StorageEvent): void {
+    if (event.key === 'user_session' && !event.newValue) {
+      window.location.href = 'login.html';
+    }
+  }
 });
+
+function getElement<T extends HTMLElement>(id: string): T {
+  const element = document.getElementById(id);
+  if (!element) throw new Error(`Elemen #${id} tidak ditemukan.`);
+  return element as T;
+}

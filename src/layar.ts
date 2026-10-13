@@ -1,13 +1,29 @@
+import { logout, requireAuth } from './shared/auth.js';
 import { getQueueTypesStorage, getTicketsStorage } from './shared/storage.js';
-import { QueueType, Ticket } from './shared/types.js';
+import { QueueType, Ticket, UserSession } from './shared/types.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  let session: UserSession;
+
+  try {
+    session = requireAuth(['admin', 'moderator', 'user']);
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') return;
+    throw error;
+  }
+
+  const userDisplay = getElement<HTMLElement>('user-display');
+  const logoutButton = getElement<HTMLButtonElement>('logout-btn');
   const callsContainer = getElement<HTMLElement>('active-calls');
   const queuesContainer = getElement<HTMLElement>('queue-cards');
   const updatedAt = getElement<HTMLElement>('updated-at');
   const feedback = getElement<HTMLElement>('display-feedback');
   const fullscreenButton = getElement<HTMLButtonElement>('fullscreen-btn');
+  const dashboardLink = getElement<HTMLAnchorElement>('dashboard-link');
 
+  userDisplay.textContent = `${session.firstName} (${session.role})`;
+  dashboardLink.hidden = session.role !== 'admin' && session.role !== 'moderator';
+  logoutButton.addEventListener('click', logout);
   fullscreenButton.addEventListener('click', toggleFullscreen);
   document.addEventListener('fullscreenchange', updateFullscreenButton);
   window.addEventListener('storage', handleStorageChange);
@@ -40,6 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleStorageChange(event: StorageEvent): void {
+    if (event.key === 'user_session' && !event.newValue) {
+      window.location.href = 'login.html';
+      return;
+    }
     if (event.key === 'tiket_antrian' || event.key === 'jenis_antrian') render();
   }
 

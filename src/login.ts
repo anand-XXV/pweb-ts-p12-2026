@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (role === 'admin' || role === 'moderator') {
         window.location.href = 'index.html';
       } else {
-        window.location.href = 'operator.html';
+        window.location.href = 'ambil-antrian.html';
       }
     } catch (error: any) {
       showError(error.message || 'Gagal terhubung ke server.');
